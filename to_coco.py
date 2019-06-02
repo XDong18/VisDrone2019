@@ -24,9 +24,10 @@ def to_coco(SYMBOL):
             images.append(image)
             # print(h,w)
         print('2 done')
+        annotations = []
         print('3 done')
 
-        categories = [{"id" : 1, "name" : 'pedestrian', "supercategory" : 'human'},
+        target_dir['categories'] = [{"id" : 1, "name" : 'pedestrian', "supercategory" : 'human'},
         {"id" : 2, "name" : 'people', "supercategory" : 'human'},
         {"id" : 3, "name" : 'bicycle', "supercategory" : 'vehicle'},
         {"id" : 4, "name" : 'car', "supercategory" : 'vehicle'},
@@ -42,11 +43,12 @@ def to_coco(SYMBOL):
         target_dir['license'] = {"id" : 1, "name" : 'MIT', "url" : url}
 
         target_dir['images'] = images
-        # target_dir['annotations'] = annotations
+        target_dir['annotations'] = annotations
+        target_dir['type'] = 'instances'
         print('5 done')
 
         #json文件名称
-        store_path=os.getcwd() + '/DET_' + SYMBOL + '.json'
+        store_path=os.getcwd() + '/instances_DET_' + SYMBOL + '.json'
         with open(store_path, 'w') as f:
             json.dump(target_dir, f)
         print('all done')
@@ -86,12 +88,12 @@ def to_coco(SYMBOL):
                     annotation = {"id" : annotation_num, "image_id" : image_id, "category_id" : int(curline[5]),
                     "segmentation" : [[]], "area" : float(curline[2])*float(curline[3]),
                     "bbox" : [int(curline[0])+int(int(curline[2])/2), int(curline[1])-int(int(curline[3])/2), int(curline[2]), int(curline[3])],
-                    "iscrowd" : int(bool(curline[7]))}
+                    "iscrowd" : 1 if curline[7]=='2' else 0 }
                     annotation_num += 1
                     annotations.append(annotation)
         print('3 done')
 
-        categories = [{"id" : 1, "name" : 'pedestrian', "supercategory" : 'human'},
+        target_dir['categories'] = [{"id" : 1, "name" : 'pedestrian', "supercategory" : 'human'},
         {"id" : 2, "name" : 'people', "supercategory" : 'human'},
         {"id" : 3, "name" : 'bicycle', "supercategory" : 'vehicle'},
         {"id" : 4, "name" : 'car', "supercategory" : 'vehicle'},
@@ -108,10 +110,11 @@ def to_coco(SYMBOL):
 
         target_dir['images'] = images
         target_dir['annotations'] = annotations
+        target_dir['type'] = 'instances'
         print('5 done')
 
         #json文件名称
-        store_path=os.getcwd() + '/DET_' + SYMBOL + '.json'
+        store_path=os.getcwd() + '/instances_DET_' + SYMBOL + '.json'
         with open(store_path, 'w') as f:
             json.dump(target_dir, f)
         print('all done')
